@@ -22,15 +22,24 @@ class BooksController @Inject()(val controllerComponents: ControllerComponents) 
     }
   }
 
-  def findBookByISBN(isbn: String): Action[AnyContent] = Action {
-    tempLibrary.find(_.isbn.replaceAll("\\s", "") == isbn) match {
-      case None => NotFound
-      case Some(book) => Ok(Json.toJson(book))
-    }
-  }
+  def findBookByISBN(isbn: String): Action[AnyContent] =
+    findBy(
+      tempLibrary, isbn
+    )(
+      _.isbn.replaceAll("\\s", ""),
+      isbn => isbn
+    )
 
-  def findBookByTitle(title: String): Action[AnyContent] = Action {
-    tempLibrary.find(_.title.toLowerCase.replaceAll("\\s", "") == title.toLowerCase) match {
+  def findBookByTitle(title: String): Action[AnyContent] =
+    findBy(
+      tempLibrary, title
+    )(
+      _.title.toLowerCase.replaceAll("\\s", ""),
+      _.toLowerCase
+    )
+
+  def findBy[A, B](collection: mutable.ListBuffer[RealBook], identifier: A)(f1: RealBook => B, f2: A => B): Action[AnyContent] = Action {
+    collection.find(f1(_) == f2(identifier)) match {
       case None => NotFound
       case Some(book) => Ok(Json.toJson(book))
     }
