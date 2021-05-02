@@ -12,8 +12,17 @@ import scala.collection.mutable
 class BooksController @Inject()(val controllerComponents: ControllerComponents) extends BaseController{
 
   implicit val realBooksJson = Json.format[RealBook]
-  private val booksList = new mutable.ListBuffer[RealBook]()
-  booksLis
+  import models.TemporaryLibrary.tempLibrary
+
+  def getAllBooks(): Action[AnyContent] = Action {
+    if (tempLibrary.isEmpty) {
+      NoContent
+    } else {
+      Ok(Json.toJson(tempLibrary))
+    }
+  }
+
+  //TODO: Migrate
 
   implicit val booksJson = Json.format[Book]
   implicit val newBookJson = Json.format[NewBook]
