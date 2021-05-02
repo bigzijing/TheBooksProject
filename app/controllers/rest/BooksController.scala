@@ -22,6 +22,13 @@ class BooksController @Inject()(val controllerComponents: ControllerComponents) 
     }
   }
 
+  def findBookByISBN(isbn: String): Action[AnyContent] = Action {
+    tempLibrary.find(_.isbn.replaceAll("\\s", "") == isbn) match {
+      case None => NotFound
+      case Some(book) => Ok(Json.toJson(book))
+    }
+  }
+
   //TODO: Migrate
 
   implicit val booksJson = Json.format[Book]

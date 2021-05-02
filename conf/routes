@@ -13,6 +13,7 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 # TODO: Migrate
 GET     /books                      controllers.rest.BooksController.getAll()
 GET     /rest/books                 controllers.rest.BooksController.getAllBooks()
+GET     /rest/books/:isbn           controllers.rest.BooksController.findBookByISBN(isbn: String)
 
 GET     /books/:ISBN                controllers.rest.BooksController.getByISBN(ISBN: Long)
 PUT     /books/viewbook/:ISBN       controllers.rest.BooksController.viewBook(ISBN: Long)
