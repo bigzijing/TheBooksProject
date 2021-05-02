@@ -25,4 +25,12 @@ class BooksController @Inject()(val controllerComponents: ControllerComponents) 
     }
   }
 
+  def getByISBN(ISBN: Long): Action[AnyContent] = Action {
+    val foundBook = booksList.find(_.isbn == ISBN)
+    foundBook match {
+      case Some(book) => Ok(Json.toJson(book))
+      case None => NotFound
+    }
+  }
+
 }
