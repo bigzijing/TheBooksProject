@@ -11,4 +11,7 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 # REST API for Books
 GET     /books                      controllers.rest.BooksController.getAll()
-GET     /books/:ISBN            controllers.rest.BooksController.getByISBN(ISBN: Long)
+
+GET     /books/:ISBN                controllers.rest.BooksController.getByISBN(ISBN: Long)
+PUT     /books/viewbook/:ISBN       controllers.rest.BooksController.viewBook(ISBN: Long)
+DELETE  /books/deleteall            controllers.rest.BooksController.deleteAll()
