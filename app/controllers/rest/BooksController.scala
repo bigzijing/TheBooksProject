@@ -38,6 +38,18 @@ class BooksController @Inject()(val controllerComponents: ControllerComponents) 
       _.toLowerCase
     )
 
+  def findBooksByAuthor(author: String): Action[AnyContent] = Action {
+    val matches = tempLibrary
+      .collect {
+        case book @RealBook(_, _, bookAuthor, _, _, _, _, _, _, _, _, _, _, _, _) if {
+          bookAuthor.toLowerCase.split(" ").exists(author.contains) && author.length > 3
+        } =>
+          book
+      }
+    if (matches.nonEmpty) Ok(Json.toJson(matches))
+    else NotFound
+  }
+
   def findBy[A, B](collection: mutable.ListBuffer[RealBook], identifier: A)(f1: RealBook => B, f2: A => B): Action[AnyContent] = Action {
     collection.find(f1(_) == f2(identifier)) match {
       case None => NotFound
