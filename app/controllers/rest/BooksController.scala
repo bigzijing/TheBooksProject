@@ -1,7 +1,7 @@
 package controllers.rest
 
 import javax.inject._
-import models.Book
+import models.{Book, NewBook}
 import play.api._
 import play.api.libs.json._
 import play.api.mvc._
@@ -12,6 +12,7 @@ import scala.collection.mutable
 class BooksController @Inject()(val controllerComponents: ControllerComponents) extends BaseController{
 
   implicit val booksJson = Json.format[Book]
+  implicit val newBookJson = Json.format[NewBook]
 
   private val booksList = new mutable.ListBuffer[Book]()
   booksList += Book(1501115073, "My Grandmother Sends Her Regards and Apologizes")
@@ -49,6 +50,22 @@ class BooksController @Inject()(val controllerComponents: ControllerComponents) 
   def deleteAll(): Action[AnyContent] = Action {
     booksList.clear()
     Ok(Json.toJson(booksList))
+  }
+
+  def addNewBook() = Action { implicit request =>
+    val content = request.body
+    val jsonObject = content.asJson
+    val bookItem: Option[NewBook] =
+      jsonObject.flatMap(Json.fromJson[NewBook](_).asOpt)
+
+    bookItem match {
+      case None => BadRequest
+      case Some(newBook) =>
+        val newId = booksList.map(_.isbn).max + 1
+        val toBeAdded = Book(newId, newBook.title, 0, None)
+        booksList += toBeAdded
+        Created(Json.toJson(toBeAdded))
+    }
   }
 
 }
