@@ -1,7 +1,7 @@
 package controllers.rest
 
 import javax.inject._
-import models.{Book, NewBook}
+import models.{Book, NewBook, RealBook}
 import play.api._
 import play.api.libs.json._
 import play.api.mvc._
@@ -10,6 +10,10 @@ import scala.collection.mutable
 
 @Singleton
 class BooksController @Inject()(val controllerComponents: ControllerComponents) extends BaseController{
+
+  implicit val realBooksJson = Json.format[RealBook]
+  private val booksList = new mutable.ListBuffer[RealBook]()
+  booksLis
 
   implicit val booksJson = Json.format[Book]
   implicit val newBookJson = Json.format[NewBook]

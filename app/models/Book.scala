@@ -13,7 +13,7 @@ case class RealBook(
                    language: String,
                    cover: String,
                    pages: Int,
-                   condition: Option[Double] = None,
+                   condition: Option[String] = None,
                    rating: Option[Double] = None,
                    grRating: Option[Double] = None,
                    location: Option[String] = None,
