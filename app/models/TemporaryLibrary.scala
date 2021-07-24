@@ -3,9 +3,9 @@ package models
 import scala.collection.mutable
 
 object TemporaryLibrary {
-  val tempLibrary = new mutable.ListBuffer[RealBook]()
+  val tempLibrary = new mutable.ListBuffer[Book]()
 
-  tempLibrary += RealBook(
+  tempLibrary += Book(
     title = "1Q84: The Complete Trilogy",
     isbn = "978 0 09957 807 9",
     author = "Haruki Murakami",
@@ -19,7 +19,7 @@ object TemporaryLibrary {
     notes = Some("Bought under RY")
   )
 
-  tempLibrary += RealBook(
+  tempLibrary += Book(
     title = "Jitterbug Perfume",
     isbn = "978 0 55340 383 1",
     author = "Tom Robbins",
@@ -33,7 +33,7 @@ object TemporaryLibrary {
     notes = Some("Bought 2nd hand in Petrivka Book Market in Kyiv, Ukraine")
   )
 
-  tempLibrary += RealBook(
+  tempLibrary += Book(
     title = "Chernobyl: History of a Tragedy",
     isbn = "978 0 14198 835 1",
     author = "Serhii Plokhy",
@@ -48,7 +48,7 @@ object TemporaryLibrary {
     read = true
   )
 
-  val gotBook1 = RealBook(
+  val gotBook1 = Book(
     title = "A Song of Ice and Fire 1: A Game of Thrones",
     isbn = "978 0 55357 340 4",
     author = "George R. R. Martin",

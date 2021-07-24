@@ -1,8 +1,7 @@
 package controllers.rest
 
 import javax.inject._
-import models.{Book, NewBook, RealBook}
-import play.api._
+import models.Book
 import play.api.libs.json._
 import play.api.mvc._
 
@@ -11,7 +10,7 @@ import scala.collection.mutable
 @Singleton
 class BooksController @Inject()(val controllerComponents: ControllerComponents) extends BaseController{
 
-  implicit val realBooksJson = Json.format[RealBook]
+  implicit val realBooksJson = Json.format[Book]
   import models.TemporaryLibrary.tempLibrary
 
   def getAllBooks(): Action[AnyContent] = Action {
@@ -41,7 +40,7 @@ class BooksController @Inject()(val controllerComponents: ControllerComponents) 
   def findBooksByAuthor(author: String): Action[AnyContent] = Action {
     val matches = tempLibrary
       .collect {
-        case book @RealBook(_, _, bookAuthor, _, _, _, _, _, _, _, _, _, _, _, _) if {
+        case book @Book(_, _, bookAuthor, _, _, _, _, _, _, _, _, _, _, _, _) if {
           bookAuthor.toLowerCase.split(" ").exists(author.contains) && author.length > 3
         } =>
           book
@@ -50,7 +49,7 @@ class BooksController @Inject()(val controllerComponents: ControllerComponents) 
     else NotFound
   }
 
-  def findBy[A, B](collection: mutable.ListBuffer[RealBook], identifier: A)(f1: RealBook => B, f2: A => B): Action[AnyContent] = Action {
+  def findBy[A, B](collection: mutable.ListBuffer[Book], identifier: A)(f1: Book => B, f2: A => B): Action[AnyContent] = Action {
     collection.find(f1(_) == f2(identifier)) match {
       case None => NotFound
       case Some(book) => Ok(Json.toJson(book))
