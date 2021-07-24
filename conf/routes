@@ -10,7 +10,7 @@ GET     /                           controllers.HomeController.index()
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 ### REST API for Books
-GET     /rest/books                 controllers.rest.BooksController.getAllBooks()
-GET     /rest/books/isbn/:isbn      controllers.rest.BooksController.findBookByISBN(isbn: String)
-GET     /rest/books/title/:title    controllers.rest.BooksController.findBookByTitle(title: String)
-GET     /rest/books/author/:author  controllers.rest.BooksController.findBooksByAuthor(author: String)
+GET     /api/books                 controllers.rest.BooksController.getAllBooks()
+GET     /api/books/isbn/:isbn      controllers.rest.BooksController.findBookByISBN(isbn: String)
+GET     /api/books/title/:title    controllers.rest.BooksController.findBookByTitle(title: String)
+GET     /api/books/author/:author  controllers.rest.BooksController.findBooksByAuthor(author: String)
