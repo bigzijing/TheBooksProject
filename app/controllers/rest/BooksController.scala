@@ -46,7 +46,7 @@ class BooksController @Inject()(val controllerComponents: ControllerComponents) 
         } =>
           book
       }
-    if (matches.nonEmpty) Ok(Json.toJson(matches))
+    if (matches.nonEmpty) Ok(Json.toJson(matches)).as("application/json")
     else NotFound
   }
 
