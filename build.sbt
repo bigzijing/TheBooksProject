@@ -1,29 +1,27 @@
-name := """TheBookProject"""
-organization := "com.example"
+lazy val projectName = "TheBooksProject"
+lazy val orgName = "dev.zij"
+val scala213 = "2.13.5"
 
-version := "1.0-SNAPSHOT"
+name in ThisBuild := projectName
+organization in ThisBuild := orgName
+organizationName in ThisBuild := orgName
+scalaVersion in ThisBuild := scala213
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
+  .settings(
+    name := projectName,
+    publish / skip := true,
+    crossScalaVersions := Nil
+  )
+  .aggregate(app, engine)
 
-scalaVersion := "2.13.5"
+lazy val app = (project in file("app"))
 
-/**
- * MongoDB
- */
-val reactiveMongoV = "1.0.5"
-
-val reactiveMongo = Seq(
-  "org.reactivemongo" %% "reactivemongo" % reactiveMongoV
-)
-
-val reactiveMongoPlay = Seq(
-  "org.reactivemongo" %% "play2-reactivemongo"            % s"${reactiveMongoV}-play28",
-  "org.reactivemongo" %% "reactivemongo-play-json-compat" % s"${reactiveMongoV}-play28"
-) ++ reactiveMongo
+lazy val engine = (project in file("engine"))
 
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
-libraryDependencies ++= reactiveMongoPlay
+libraryDependencies ++= Dependencies.reactiveMongoPlay
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.example.controllers._"
