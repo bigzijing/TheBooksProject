@@ -18,6 +18,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 lazy val app = (project in file("app"))
 
 lazy val engine = (project in file("engine"))
+    .settings(libraryDependencies ++= Dependencies.engineDeps)
 
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
