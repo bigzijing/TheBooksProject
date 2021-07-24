@@ -57,25 +57,4 @@ class BooksController @Inject()(val controllerComponents: ControllerComponents) 
     }
   }
 
-//  def deleteAll(): Action[AnyContent] = Action {
-//    booksList.clear()
-//    Ok(Json.toJson(booksList))
-//  }
-//
-//  def addNewBook() = Action { implicit request =>
-//    val content = request.body
-//    val jsonObject = content.asJson
-//    val bookItem: Option[NewBook] =
-//      jsonObject.flatMap(Json.fromJson[NewBook](_).asOpt)
-//
-//    bookItem match {
-//      case None => BadRequest
-//      case Some(newBook) =>
-//        val newId = booksList.map(_.isbn).max + 1
-//        val toBeAdded = Book(newId, newBook.title, 0, None)
-//        booksList += toBeAdded
-//        Created(Json.toJson(toBeAdded))
-//    }
-//  }
-
 }
