@@ -21,6 +21,8 @@ jobs:
       with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: cd to Dockerfile filepath
+      run: cd target/docker/stage
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
