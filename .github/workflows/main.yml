@@ -1,27 +1,26 @@
 name: Release DevOps with Docker # Name of the workflow
-
-# On a push to the branch named master
 on:
+  pull_request:
   push:
-    branches: 
+    branches:
       - master
-
-# Job called build runs-on ubuntu-latest
 jobs:
-  build: 
+  test:
     runs-on: ubuntu-latest
     steps:
-    # Checkout to the repository (the actions don't actually need this since they use the repository context anyway)
-    - uses: actions/checkout@v2 
-
-    # We need to login so we can later push the image without issues. 
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Setup Scala
+      uses: olafurpg/setup-scala@v10
+      with:
+        java-version: "adopt@1.8"
+    - name: Build and Test
+      run: sbt -v -Dfile.encoding=UTF-8 +test
     - name: Login to DockerHub
-      uses: docker/login-action@v1 
-      with: 
+      uses: docker/login-action@v1
+      with:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
-            
-    # Builds devopsdockeruh/docker-hy.github.io
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
