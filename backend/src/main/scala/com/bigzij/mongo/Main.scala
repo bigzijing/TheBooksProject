@@ -1,5 +1,6 @@
 package com.bigzij.mongo
 
+import com.bigzij.mongo.models.BookDBO
 import reactivemongo.api.bson.{BSONDocumentReader, BSONDocumentWriter, Macros}
 import reactivemongo.api.{AsyncDriver, MongoConnection}
 import reactivemongo.api.MongoConnection.ParsedURI
@@ -7,7 +8,6 @@ import reactivemongo.api.bson.collection.BSONCollection
 import reactivemongo.api.{AsyncDriver, DB, MongoConnection}
 import zio.Console.printLine
 import zio.{App, ExitCode, URIO, ZIO}
-import Book._
 
 import scala.concurrent.Future
 
@@ -22,7 +22,7 @@ object Main extends App {
       booksCollection
     }
 
-    val testBook = Book(
+    val testBook = BookDBO(
       title = "Indiana Jones 151",
       isbn = "12345",
       author = "Josh King",
@@ -42,25 +42,3 @@ object Main extends App {
   }
 }
 
-case class Book(
-                 title: String,
-                 isbn: String,
-                 author: String,
-                 publisher: String,
-                 category: String,
-                 language: String,
-                 cover: String,
-                 pages: Int,
-                 condition: Option[String] = None,
-                 rating: Option[Double] = None,
-                 grRating: Option[Double] = None,
-                 location: Option[String] = None,
-                 status: Option[String] = None,
-                 notes: Option[String] = None,
-                 read: Boolean = false
-               )
-
-object Book {
-  implicit def bookWriter: BSONDocumentWriter[Book] = Macros.writer[Book]
-  implicit def bookReader: BSONDocumentReader[Book] = Macros.reader[Book]
-}
