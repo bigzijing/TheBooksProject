@@ -1,10 +1,8 @@
 package com.bigzij.mongo
 
 import com.bigzij.mongo.models.BookDBO
-import reactivemongo.api.DB
-import reactivemongo.api.bson.{BSONDocument, BSONObjectID}
+import reactivemongo.api.bson.{BSONDocument}
 import reactivemongo.api.bson.collection.BSONCollection
-import zio.ZIO
 
 import java.time.Instant
 import scala.concurrent.Future
@@ -56,6 +54,7 @@ class BooksServiceImpl(mongoService: MongoModule, collectionName: String = "book
       BSONDocument("isbn" -> isbn)
     )
 
+  // TODO: Make smarter and use regex
   override def findByTitleAndAuthor(title: Option[String] = None, author: Option[String] = None): Future[List[BookDBO]] =
     if (title.isEmpty && author.isEmpty) Future(List.empty[BookDBO])
     else find[BookDBO] {
@@ -67,6 +66,7 @@ class BooksServiceImpl(mongoService: MongoModule, collectionName: String = "book
       BSONDocument("$or" -> query)
     }
 
+  // TODO: Implement
   override def findBook(_id: Option[String], title: Option[String], isbn: Option[String], author: Option[String], publisher: Option[String], category: Option[String], cover: Option[String], pages: Option[Int], condition: Option[String], rating: Option[Double], grRating: Option[Double], location: Option[String], status: Option[String], note: Option[String], read: Option[Boolean]): Future[List[BookDBO]] = ???
 
   def addBook(book: BookDBO): Future[Unit] = this.insert(book.copy(createdDate = Some(Instant.now()))).map(_ => ())
