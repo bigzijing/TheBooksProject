@@ -36,15 +36,23 @@ object Main extends App {
       pages = 14
     )
 
-    val insertOneAgain = getCollection("books")
-      .flatMap { coll =>
-        coll.insert.one(testBook)
-      }
+    val testBook2 = testBook.copy(title = "Johanne Wahlberg Stenington")
 
-    val insertOne = bookService.insertOne(testBook)
-    val insertOne2 = bookService.insertOne2(testBook)
+    val bigFuture =
+      for {
+        bookByOid <- bookService.findByOid("60fbff40a6ab18ee42d0e7e3")
+        _ = println(s"The book you found by oid is $bookByOid\n")
+        bookByIsbn <- bookService.findByISBN("12345")
+        _ = println(s"The book you found by isbn is $bookByIsbn\n")
+        bookByTitleAndAuthor <- bookService.findByTitleAndAuthor(Some("1Q84: The Complete Trilogy"), Some("Haruki Murakami"))
+        _ = println(s"The book you found by title and author is $bookByTitleAndAuthor\n")
+        bookByTitle <- bookService.findByTitleAndAuthor(Some("1Q84: The Complete Trilogy"), None)
+        _ = println(s"The book you found by title is $bookByTitle\n")
+        bookByAuthor <- bookService.findByTitleAndAuthor(None, Some("Haruki Murakami"))
+        _ = println(s"The book you found by author is $bookByAuthor\n")
+      } yield ()
 
-    (ZIO(insertOne) *> ZIO(insertOne2) *> ZIO.fromFuture(ec => insertOneAgain)).orDie *> printLine("Welcome to your first ZIO app!").exitCode
+    ZIO.fromFuture(implicit ec => bigFuture).orDie *> printLine("Welcome to your first ZIO app!").exitCode
   }
 }
 
