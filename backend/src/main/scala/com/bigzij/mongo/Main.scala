@@ -15,7 +15,7 @@ object Main extends App {
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = {
     implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
-    val booksDb = new MongoDSLImpl
+    val booksDb = new MongoModuleImpl
 
     def getCollection(collectionName: String) = {
       val booksCollection: Future[BSONCollection] = booksDb.mongoDB.map(_.collection(collectionName))
