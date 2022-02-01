@@ -15,6 +15,9 @@ object Main extends App {
   override def run(args: List[String]): URIO[zio.ZEnv, ExitCode] = {
     implicit val ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
+    val mongoModule = new MongoModuleImpl
+    val bookService = new BooksServiceImpl(mongoModule)
+
     val booksDb = new MongoModuleImpl
 
     def getCollection(collectionName: String) = {
@@ -33,12 +36,15 @@ object Main extends App {
       pages = 14
     )
 
-    val insertOne = getCollection("books")
+    val insertOneAgain = getCollection("books")
       .flatMap { coll =>
         coll.insert.one(testBook)
       }
 
-    ZIO.fromFuture(ec => insertOne).orDie *> printLine("Welcome to your first ZIO app!").exitCode
+    val insertOne = bookService.insertOne(testBook)
+    val insertOne2 = bookService.insertOne2(testBook)
+
+    (ZIO(insertOne) *> ZIO(insertOne2) *> ZIO.fromFuture(ec => insertOneAgain)).orDie *> printLine("Welcome to your first ZIO app!").exitCode
   }
 }
 
