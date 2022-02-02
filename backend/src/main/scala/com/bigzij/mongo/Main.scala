@@ -30,10 +30,10 @@ object Main extends App {
       isbn = "12345",
       author = "Josh King",
       publisher = "Penguin Publishing House",
-      category = "Children's",
+      category = List("Children's"),
       language = "Ukrainian",
       cover = "Hard",
-      pages = 14
+      pages = Some(14)
     )
 
     val testBook2 = testBook.copy(title = "Johanne Wahlberg Stenington")
