@@ -5,7 +5,21 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
-scalaVersion := "2.13.5"
+lazy val backend = (project in file("backend"))
+  .settings(
+    name := "backend",
+    libraryDependencies ++= Seq(
+      "dev.zio" %% "zio" % "2.0.0-RC1",
+      "dev.zio" %% "zio-test" % "2.0.0-RC1" % Test,
+      "org.reactivemongo" %% "reactivemongo" % "1.0.3",
+      "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "3.0.0" % Test,
+      "com.github.pureconfig" %% "pureconfig" % "0.17.1",
+      "com.github.tototoshi" %% "scala-csv" % "1.3.10"
+    ),
+    testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
+  )
+
+scalaVersion := "2.13.8"
 
 Compile / herokuAppName := "the-books-project"
 Universal / javaOptions ++= Seq(
