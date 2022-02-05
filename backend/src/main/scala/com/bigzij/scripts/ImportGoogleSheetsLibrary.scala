@@ -1,26 +1,42 @@
 package com.bigzij.scripts
 
+import com.bigzij.mongo.{BooksServiceImpl, MongoModuleImpl}
 import com.bigzij.mongo.models.BookDBO
 import com.github.tototoshi.csv.CSVReader
-import zio.Console.printLine
-import zio.{App, ExitCode, URIO, ZEnv, ZIO}
+import zio.{App, ExitCode, Task, URIO, ZEnv, ZIO}
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
+import scala.concurrent.duration.FiniteDuration
 
 object ImportGoogleSheetsLibrary extends App {
 
+  override def run(args: List[String]): URIO[ZEnv, ExitCode] =
+    (for {
+      books <- booksZio
+      _ <- insertBooksZio(books)
+    } yield ()).exitCode
+
   implicit val ec = ExecutionContext.Implicits.global
 
-  val bufferedSource = io.Source.fromResource("csv/librarylist.csv")
-    .getLines
+  val booksZio = ZIO {
+    val csvFile = CSVReader
+      .open(io.Source.fromResource("csv/library_list.csv"))
 
-  val csvFile = CSVReader
-    .open(io.Source.fromResource("csv/librarylist.csv"))
+    val csvLines = csvFile.all()
+      .drop(2)
 
-  val csvLines = csvFile.all()
-    .drop(2)
-    .map(rowsToBook)
+    csvLines.map(rowsToBook)
+  }
+
+  def insertBooksZio(books: List[BookDBO]): Task[Unit] = ZIO.fromFuture { implicit ec =>
+    Future {
+      val mongoModule = new MongoModuleImpl
+      val bookService = new BooksServiceImpl(mongoModule)
+
+      bookService.addBooks(books).onComplete(_ => mongoModule.closeMongoConnection(FiniteDuration(1, "SECONDS")))
+    }
+  }
 
   def rowsToBook(row: List[String]): BookDBO = {
     def emptyStringToNone(rawString: String): Option[String] =
@@ -28,7 +44,7 @@ object ImportGoogleSheetsLibrary extends App {
       else Some(rawString)
 
     def genresToList(genres: String): List[String] =
-      genres.split("\n").toList
+      genres.split("; ").toList
 
     BookDBO(
       title = row.head,
@@ -49,7 +65,4 @@ object ImportGoogleSheetsLibrary extends App {
       dateBought = None
     )
   }
-
-  override def run(args: List[String]): URIO[ZEnv, ExitCode] =
-    (printLine("hello world") *> ZIO.fromFuture(implicit ec => Future(csvLines.take(10).foreach(book => println(book.toShortString))))).exitCode
 }

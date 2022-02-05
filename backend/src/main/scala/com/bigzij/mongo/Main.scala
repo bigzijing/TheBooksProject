@@ -18,26 +18,6 @@ object Main extends App {
     val mongoModule = new MongoModuleImpl
     val bookService = new BooksServiceImpl(mongoModule)
 
-    val booksDb = new MongoModuleImpl
-
-    def getCollection(collectionName: String) = {
-      val booksCollection: Future[BSONCollection] = booksDb.mongoDB.map(_.collection(collectionName))
-      booksCollection
-    }
-
-    val testBook = BookDBO(
-      title = "Indiana Jones 151",
-      isbn = "12345",
-      author = "Josh King",
-      publisher = "Penguin Publishing House",
-      category = List("Children's"),
-      language = "Ukrainian",
-      cover = "Hard",
-      pages = Some(14)
-    )
-
-    val testBook2 = testBook.copy(title = "Johanne Wahlberg Stenington")
-
     val bigFuture =
       for {
         bookByOid <- bookService.findByOid("60fbff40a6ab18ee42d0e7e3")
