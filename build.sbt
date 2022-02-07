@@ -16,6 +16,7 @@ lazy val backend = (project in file("backend"))
       "com.github.pureconfig" %% "pureconfig" % "0.17.1",
       "com.github.tototoshi" %% "scala-csv" % "1.3.10"
     ),
+    libraryDependencies ++= calibanZioDeps,
     testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
   )
 
@@ -26,6 +27,10 @@ Universal / javaOptions ++= Seq(
   "-Dpidfile.path=/dev/null"
 )
 
+// Caliban Zio Dependencies
+val calibanZioDeps = Seq("com.github.ghostdogpr" %% "caliban" % "1.3.3", "com.github.ghostdogpr" %% "caliban-zio-http"   % "1.3.3")
+
+libraryDependencies ++= calibanZioDeps
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
 
