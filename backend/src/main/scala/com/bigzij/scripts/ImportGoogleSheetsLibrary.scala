@@ -4,6 +4,7 @@ import com.bigzij.mongo.{BooksServiceImpl, MongoModuleImpl}
 import com.bigzij.mongo.models.BookDBO
 import com.github.tototoshi.csv.CSVReader
 import zio.{App, ExitCode, Task, URIO, ZEnv, ZIO}
+import scala.io.Source
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
@@ -21,7 +22,7 @@ object ImportGoogleSheetsLibrary extends App {
 
   val booksZio = ZIO {
     val csvFile = CSVReader
-      .open(io.Source.fromResource("csv/library_list.csv"))
+      .open(Source.fromResource("csv/library_list.csv"))
 
     val csvLines = csvFile.all()
       .drop(2)

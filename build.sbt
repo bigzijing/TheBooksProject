@@ -33,6 +33,7 @@ val calibanZioDeps = Seq("com.github.ghostdogpr" %% "caliban" % "1.3.3", "com.gi
 libraryDependencies ++= calibanZioDeps
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "5.0.0" % Test
+libraryDependencies += "com.softwaremill.macwire" %% "macros" % "2.5.4" % "provided"
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "com.example.controllers._"
